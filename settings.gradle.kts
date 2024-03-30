@@ -7,3 +7,4 @@
  */
 
 rootProject.name = "abn-jvm-examples"
+include("number-converter")
