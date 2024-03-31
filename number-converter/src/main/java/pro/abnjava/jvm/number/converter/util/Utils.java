@@ -4,6 +4,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Utils {
+
+    private Utils(){}
+
     public static int countChars(String str, char charsToCount) {
         String regex = "[" + charsToCount + "]";
         Pattern pattern = Pattern.compile(regex);
