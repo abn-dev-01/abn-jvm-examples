@@ -1,4 +1,3 @@
-import org.codehaus.groovy.tools.shell.util.Logger.io
 
 plugins {
     id("java-library")
@@ -7,7 +6,7 @@ plugins {
 }
 
 group = "pro.abnjava.jvm"
-version = "0.1-snapshot"
+version = "0.0.1-snapshot"
 
 repositories {
     mavenCentral()
