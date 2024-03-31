@@ -5,36 +5,17 @@ import java.util.Optional;
 
 import pro.abnjava.jvm.converter.bankcard.BankCardValidator;
 import pro.abnjava.jvm.converter.numbers.NumberParser;
+import pro.abnjava.jvm.converter.parser.ParserResult;
 
 
-public abstract class InputChecker {
+public interface InputChecker<T> {
 
-    protected BankCardValidator bankCardValidator;
-    protected NumberParser numberParser;
+    Optional<ParserResult> checkInput(T input);
 
-    protected InputChecker() {
-        this.bankCardValidator = getBankCardValidator();
-        this.numberParser = getNumberParser();
-    }
+    NumberParser getNumberParser();
 
-    protected abstract BankCardValidator getBankCardValidator();
+    BankCardValidator getBankCardValidator();
 
-    protected abstract NumberParser getNumberParser();
+    Optional<ParserResult<BigDecimal>> parseBankCardNumber(T input);
 
-    protected abstract Optional<ParserResult<BigDecimal>> parseBankCardNumber(String input);
-
-
-    /**
-     * @param input The input string potentially containing a bank card number or a number.
-     *
-     * @return An Optional containing a NumberParserResult if the input is a valid number or a
-     * BankCardResult, or an empty Optional.
-     */
-    public Optional<ParserResult<BigDecimal>> checkInput(String input) {
-        if (bankCardValidator.isBankCardNumber(input)) {
-            return parseBankCardNumber(input);
-        }
-
-        return numberParser.parse(input);
-    }
 }

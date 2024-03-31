@@ -3,7 +3,7 @@ package pro.abnjava.jvm.converter.numbers.impl;
 import java.math.BigDecimal;
 import java.util.Optional;
 
-import pro.abnjava.jvm.converter.ParserResult;
+import pro.abnjava.jvm.converter.parser.ParserResult;
 import pro.abnjava.jvm.converter.numbers.NumberParser;
 import pro.abnjava.jvm.converter.numbers.NumberValidator;
 import pro.abnjava.jvm.converter.util.Utils;

@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.util.Optional;
 
 import pro.abnjava.jvm.converter.ResultType;
-import pro.abnjava.jvm.converter.ParserResult;
+import pro.abnjava.jvm.converter.parser.ParserResult;
 
 /**
  * Object representing a bank card number - the result of the parsing.

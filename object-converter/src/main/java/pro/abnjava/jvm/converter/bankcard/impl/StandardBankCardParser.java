@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.util.Optional;
 
 import pro.abnjava.jvm.converter.InputResult;
-import pro.abnjava.jvm.converter.ParserResult;
+import pro.abnjava.jvm.converter.parser.ParserResult;
 import pro.abnjava.jvm.converter.bankcard.BankCardParser;
 
 /**
@@ -12,9 +12,16 @@ import pro.abnjava.jvm.converter.bankcard.BankCardParser;
  */
 public class StandardBankCardParser implements BankCardParser {
 
+    private boolean flag;
+    public StandardBankCardParser() {
+    }
+    public StandardBankCardParser(boolean flag) {
+        this.flag = flag;
+    }
+
     @Override
     public boolean returnInput() {
-        return false; // return empty when parsing failed.
+        return flag; // return empty when parsing failed.
     }
 
     /**
