@@ -1,8 +1,13 @@
 package pro.abnjava.jvm.number.converter.numbers;
 
-import java.math.BigDecimal;
+import java.util.Optional;
+
+import pro.abnjava.jvm.number.converter.ParserResult;
 
 public interface NumberParser {
 
-    BigDecimal toNumber(String input);
+    Optional<ParserResult> toNumber(String input);
+
+    NumberValidator getValidator();
+
 }

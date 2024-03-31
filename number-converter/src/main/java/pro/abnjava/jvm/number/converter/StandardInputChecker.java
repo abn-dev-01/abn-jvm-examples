@@ -7,7 +7,7 @@ import pro.abnjava.jvm.number.converter.bankcard.BankCardParserStandard;
 import pro.abnjava.jvm.number.converter.bankcard.BankCardValidator;
 import pro.abnjava.jvm.number.converter.bankcard.BankCardValidatorStandard;
 import pro.abnjava.jvm.number.converter.numbers.NumberParser;
-import pro.abnjava.jvm.number.converter.numbers.NumberParserStandard;
+import pro.abnjava.jvm.number.converter.numbers.StandardNumberParser;
 
 public class StandardInputChecker extends InputChecker {
 
@@ -18,11 +18,11 @@ public class StandardInputChecker extends InputChecker {
 
     @Override
     protected NumberParser getNumberParser() {
-        return new NumberParserStandard();
+        return new StandardNumberParser();
     }
 
     @Override
-    protected Optional<ResultType> parseBankCardNumber(String input) {
+    protected Optional<ParserResult> parseBankCardNumber(String input) {
         BankCardParser bankCardParser = new BankCardParserStandard();
         return bankCardParser.toBankCardNumber(input);
     }

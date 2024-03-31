@@ -11,8 +11,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import pro.abnjava.jvm.number.converter.bankcard.BankCardResult;
-import pro.abnjava.jvm.number.converter.numbers.NumberResult;
+import pro.abnjava.jvm.number.converter.bankcard.BankCardParserResult;
+import pro.abnjava.jvm.number.converter.numbers.NumberParserResult;
 
 class StandardInputCheckerTest {
 
@@ -25,12 +25,12 @@ class StandardInputCheckerTest {
     @Test
     void testCheckInputWithValidBankCard() {
         assertTrue(inputChecker.checkInput("4111 1111 1111 1111").isPresent());
-        assertTrue(inputChecker.checkInput("4111 1111 1111 1111").get() instanceof BankCardResult);
+        assertTrue(inputChecker.checkInput("4111 1111 1111 1111").get() instanceof BankCardParserResult);
     }
 
     @Test
     void testCheckInputWithInvalidBankCard() {
-        final Optional<ResultType> resultType = inputChecker.checkInput("1234 5678 9012");
+        final Optional<ParserResult> resultType = inputChecker.checkInput("1234 5678 9012");
         assertTrue(resultType.isPresent());
         assertEquals("123456789012", resultType.get().getNumber().toString());
     }
@@ -38,7 +38,7 @@ class StandardInputCheckerTest {
     @Test
     void testCheckInputWithValidNumber() {
         assertTrue(inputChecker.checkInput("12345").isPresent());
-        assertTrue(inputChecker.checkInput("12345").get() instanceof NumberResult);
+        assertTrue(inputChecker.checkInput("12345").get() instanceof NumberParserResult);
     }
 
     @Test
@@ -53,7 +53,7 @@ class StandardInputCheckerTest {
 
     @Test
     void testCheckInputWithNumber1() {
-        final Optional<ResultType> resultType = inputChecker.checkInput("1 234 567 890.12");
+        final Optional<ParserResult> resultType = inputChecker.checkInput("1 234 567 890.12");
         assertTrue(resultType.isPresent());
         assertEquals(new BigDecimal("1234567890.12"), resultType.get().getNumber());
     }
@@ -65,7 +65,7 @@ class StandardInputCheckerTest {
         "(1.234.567.890,12)/-1234567890.12"
     }, delimiter = '/')
     void testCheckInputWithNumber2(String arg, String expected) {
-        final Optional<ResultType> resultType = inputChecker.checkInput(arg);
+        final Optional<ParserResult> resultType = inputChecker.checkInput(arg);
         assertTrue(resultType.isPresent());
         assertEquals(new BigDecimal(expected), resultType.get().getNumber());
     }

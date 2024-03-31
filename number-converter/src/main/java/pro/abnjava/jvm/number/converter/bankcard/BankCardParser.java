@@ -2,10 +2,10 @@ package pro.abnjava.jvm.number.converter.bankcard;
 
 import java.util.Optional;
 
-import pro.abnjava.jvm.number.converter.ResultType;
+import pro.abnjava.jvm.number.converter.ParserResult;
 
 public interface BankCardParser {
 
 
-   Optional<ResultType>  toBankCardNumber(String input);
+   Optional<ParserResult>  toBankCardNumber(String input);
 }

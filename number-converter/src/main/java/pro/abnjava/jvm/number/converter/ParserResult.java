@@ -2,7 +2,7 @@ package pro.abnjava.jvm.number.converter;
 
 import java.math.BigDecimal;
 
-public interface ResultType {
+public interface ParserResult {
     BigDecimal getNumber();
     NumberType getType();
 }

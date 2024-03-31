@@ -1,3 +1,5 @@
+val lang3Version: String by project
+val junitVersion: String by project
 
 plugins {
     id("java-library")
@@ -6,14 +8,16 @@ plugins {
 }
 
 group = "pro.abnjava.jvm"
-version = "0.0.1-snapshot"
+version = "0.1.0-snapshot"
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    testImplementation(platform("org.junit:junit-bom:5.9.1"))
+    implementation("org.apache.commons:commons-lang3:$lang3Version")
+
+    testImplementation(platform("org.junit:junit-bom:$junitVersion"))
     testImplementation("org.junit.jupiter:junit-jupiter")
 }
 

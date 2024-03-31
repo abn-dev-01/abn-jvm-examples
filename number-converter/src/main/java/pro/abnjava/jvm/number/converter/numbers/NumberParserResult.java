@@ -2,14 +2,13 @@ package pro.abnjava.jvm.number.converter.numbers;
 
 import java.math.BigDecimal;
 
-import lombok.ToString;
 import pro.abnjava.jvm.number.converter.NumberType;
-import pro.abnjava.jvm.number.converter.ResultType;
+import pro.abnjava.jvm.number.converter.ParserResult;
 
-public class NumberResult implements ResultType {
+public class NumberParserResult implements ParserResult {
     private final BigDecimal number;
 
-    public NumberResult(BigDecimal number) {
+    public NumberParserResult(BigDecimal number) {
         this.number = number;
     }
 
@@ -27,7 +26,7 @@ public class NumberResult implements ResultType {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("NumberResult{");
+        final StringBuilder sb = new StringBuilder("NumberParserResult{");
         sb.append("number=").append(number).append(",");
         sb.append("type=").append(getType());
         sb.append('}');

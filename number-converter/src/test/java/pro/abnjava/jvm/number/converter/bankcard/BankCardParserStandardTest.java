@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
-import pro.abnjava.jvm.number.converter.ResultType;
+import pro.abnjava.jvm.number.converter.ParserResult;
 
 class BankCardParserStandardTest {
 
@@ -18,7 +18,7 @@ class BankCardParserStandardTest {
         final var bankCardNumber = bankCardParser.toBankCardNumber("1234 5678 9012 3456");
         assertTrue(bankCardNumber.isPresent());
 
-        final ResultType actual = bankCardNumber.get();
+        final ParserResult actual = bankCardNumber.get();
         assertEquals(new BigDecimal("1234567890123456").toString(), actual.getNumber().toString());
     }
 
@@ -35,25 +35,25 @@ class BankCardParserStandardTest {
 
     @Test
     void testToBankCardNumberWithNonDigitCharacters() {
-        final Optional<ResultType> bankCardNumber = bankCardParser.toBankCardNumber("1234-5678-9012-3456");
+        final Optional<ParserResult> bankCardNumber = bankCardParser.toBankCardNumber("1234-5678-9012-3456");
         assertTrue(bankCardNumber.isPresent());
-        final BankCardResult resultType = (BankCardResult) bankCardNumber.get();
+        final BankCardParserResult resultType = (BankCardParserResult) bankCardNumber.get();
         assertEquals("1234567890123456", resultType.getNumber().toString());
     }
 
     @Test
     void testToBankCardNumberWithExactLengthAndSpaces() {
-        final Optional<ResultType> bankCardNumber = bankCardParser.toBankCardNumber("1234 5678 9012 3456");
+        final Optional<ParserResult> bankCardNumber = bankCardParser.toBankCardNumber("1234 5678 9012 3456");
         assertTrue(bankCardNumber.isPresent());
-        final ResultType resultType = bankCardNumber.get();
-        assertEquals("1234567890123456", resultType.getNumber().toString());
+        final ParserResult parserResult = bankCardNumber.get();
+        assertEquals("1234567890123456", parserResult.getNumber().toString());
     }
 
     @Test
     void testToBankCardNumberWithExactLengthAndDashes() {
-        final Optional<ResultType> bankCardNumber = bankCardParser.toBankCardNumber("1234-5678-9012-3456");
+        final Optional<ParserResult> bankCardNumber = bankCardParser.toBankCardNumber("1234-5678-9012-3456");
         assertTrue(bankCardNumber.isPresent());
-        final ResultType resultType = bankCardNumber.get();
-        assertEquals("1234567890123456", resultType.getNumber().toString());
+        final ParserResult parserResult = bankCardNumber.get();
+        assertEquals("1234567890123456", parserResult.getNumber().toString());
     }
 }

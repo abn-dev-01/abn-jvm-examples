@@ -1,45 +1,76 @@
 package pro.abnjava.jvm.number.converter.numbers;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
+import pro.abnjava.jvm.number.converter.ParserResult;
 import pro.abnjava.jvm.number.converter.util.Utils;
 
-public class NumberParserStandard implements NumberParser {
+public class StandardNumberParser implements NumberParser {
 
     public static final String COMMA = ",";
     public static final String DOT = ".";
     public static final String EMPTY = "";
     public static final String SPACE = " ";
+    public static final String USD = "$";
+    public static final String EUR = "€";
+
+    // Assumed ',' is the decimal separator and number < 1.0 can be 0.123, 00.123, 000.1234
+    public static final String FRACTIONAL_REGEX = "^0+.\\d+";
+
 
     @Override
-    public BigDecimal toNumber(String input) {
+    public NumberValidator getValidator() {
+        return new StandardNumberValidator();
+    }
+
+    @Override
+    public Optional<ParserResult> toNumber(String input) {
+
+        if (!getValidator().validate(input)) {
+            return Optional.empty();
+        }
 
         var isSpaceAndComma = isSpaceAndComma(input);
         var isSpaceAndDot = isSpaceAndDot(input);
 
         // Removing currency symbols and spaces
-        String cleanedInput = input.replaceAll("[€$\\s]", EMPTY);
+        String cleanedInput = input.replaceAll("[" + USD + EUR + "\\s]", EMPTY);
 
         // Determining the sign of a number
         boolean isNegative = isNegative(cleanedInput);
         cleanedInput = cleanedInput.replaceAll("[()\\-]", EMPTY);
 
-        // Replacing delimiter characters
-        if (cleanedInput.contains(COMMA) && cleanedInput.contains(DOT)) {
-            // Assuming that if both '.' and ',' are present, ',' is the decimal separator
-            cleanedInput = parseWhenDotAndComma(cleanedInput);
-        } else {
-            cleanedInput = parseWhenCommaOrDot(cleanedInput, isSpaceAndComma, isSpaceAndDot);
-        }
+        // Check if the input is a fraction like: 0.001 00.00002 000.000002222
+        var isFractional = isFractionalNumber(input);
 
+        if (!isFractional) {
+            if (cleanedInput.contains(COMMA) && cleanedInput.contains(DOT)) {
+                // Replacing delimiter characters
+                // Assuming that if both '.' and ',' are present, ',' is the decimal separator
+                cleanedInput = parseWhenDotAndComma(cleanedInput);
+            } else {
+                cleanedInput = parseWhenCommaOrDot(cleanedInput, isSpaceAndComma, isSpaceAndDot);
+            }
+        }
         // Convert to number
         BigDecimal number = new BigDecimal(cleanedInput);
-        return isNegative ? number.negate() : number;
+        var result = isNegative ? number.negate() : number;
+
+        return Optional.of(new NumberParserResult(result));
     }
 
-    private static String parseWhenCommaOrDot(String cleanedInput, boolean isSpaceAndComma, boolean isSpaceAndDot) {
-        // Assuming '.' as the thousand separator if ',' is the decimal separator
-        if (cleanedInput.contains(COMMA)) { // repalce comma with dot
+    /*
+     * Check if the input has a fraction only.
+     * `input` argument is notNull, contains only digits, commas and dots.
+     */
+    public boolean isFractionalNumber(String input) {
+        return input.matches(FRACTIONAL_REGEX);
+    }
+
+    private String parseWhenCommaOrDot(String cleanedInput, boolean isSpaceAndComma, boolean isSpaceAndDot) {
+        // Assuming '.' as the thousand separator and ',' is the decimal separator
+        if (cleanedInput.contains(COMMA)) {
             cleanedInput = replaceCommaWithDot(cleanedInput);
         }
         final int countDots = Utils.countChars(cleanedInput, DOT.charAt(0));
@@ -57,7 +88,7 @@ public class NumberParserStandard implements NumberParser {
         return cleanedInput;
     }
 
-    private static String parseWhenDotAndComma(String cleanedInput) {
+    private String parseWhenDotAndComma(String cleanedInput) {
         // determining the position of the decimal separator - the last occurrence of '.' and ','
         var lastPosDot = cleanedInput.lastIndexOf(DOT);
         var lastPosComma = cleanedInput.lastIndexOf(COMMA);
@@ -73,19 +104,19 @@ public class NumberParserStandard implements NumberParser {
         return cleanedInput;
     }
 
-    private static boolean isNegative(String cleanedInput) {
+    private boolean isNegative(String cleanedInput) {
         return cleanedInput.contains("(") || cleanedInput.endsWith("-") || cleanedInput.startsWith("-");
     }
 
-    private static boolean isSpaceAndDot(String input) {
+    private boolean isSpaceAndDot(String input) {
         return input.contains(SPACE) && input.contains(DOT);
     }
 
-    private static boolean isSpaceAndComma(String input) {
+    private boolean isSpaceAndComma(String input) {
         return input.contains(SPACE) && input.contains(COMMA);
     }
 
-    private static String replaceCommaWithDot(String cleanedInput) {
+    private String replaceCommaWithDot(String cleanedInput) {
         cleanedInput = cleanedInput.replace(COMMA, DOT);
         return cleanedInput;
     }
