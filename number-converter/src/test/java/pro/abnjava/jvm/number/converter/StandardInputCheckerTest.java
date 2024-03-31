@@ -14,9 +14,9 @@ import org.junit.jupiter.params.provider.CsvSource;
 import pro.abnjava.jvm.number.converter.bankcard.BankCardResult;
 import pro.abnjava.jvm.number.converter.numbers.NumberResult;
 
-class InputCheckerTest {
+class StandardInputCheckerTest {
 
-    private InputChecker inputChecker = new InputChecker();
+    private InputChecker inputChecker = new StandardInputChecker();
 
     @BeforeEach
     void setUp() {

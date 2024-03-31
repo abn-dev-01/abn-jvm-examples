@@ -4,4 +4,5 @@ import java.math.BigDecimal;
 
 public interface ResultType {
     BigDecimal getNumber();
+    NumberType getType();
 }
