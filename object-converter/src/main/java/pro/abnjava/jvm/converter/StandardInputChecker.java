@@ -8,7 +8,10 @@ import pro.abnjava.jvm.converter.bankcard.BankCardValidator;
 import pro.abnjava.jvm.converter.bankcard.impl.StandardBankCardParser;
 import pro.abnjava.jvm.converter.bankcard.impl.StandardBankCardValidator;
 import pro.abnjava.jvm.converter.numbers.NumberParser;
+import pro.abnjava.jvm.converter.numbers.NumberValidator;
 import pro.abnjava.jvm.converter.numbers.impl.StandardNumberParser;
+import pro.abnjava.jvm.converter.numbers.impl.StandardNumberValidator;
+import pro.abnjava.jvm.converter.parser.EmptyResult;
 import pro.abnjava.jvm.converter.parser.ParserResult;
 
 public class StandardInputChecker implements InputChecker<String> {
@@ -16,10 +19,13 @@ public class StandardInputChecker implements InputChecker<String> {
     protected BankCardValidator bankCardValidator;
     protected NumberParser numberParser;
 
+    protected NumberValidator numberValidator;
+
 
     public StandardInputChecker() {
         this.bankCardValidator = getBankCardValidator();
         this.numberParser = getNumberParser();
+        this.numberValidator = getNumberValidator();
     }
 
     @Override
@@ -30,6 +36,14 @@ public class StandardInputChecker implements InputChecker<String> {
     @Override
     public NumberParser getNumberParser() {
         return new StandardNumberParser();
+    }
+
+    /**
+     * @return
+     */
+    @Override
+    public NumberValidator getNumberValidator() {
+        return new StandardNumberValidator();
     }
 
     @Override
@@ -45,11 +59,15 @@ public class StandardInputChecker implements InputChecker<String> {
      * BankCardResult, or an empty Optional.
      */
     @Override
-    public Optional<ParserResult> checkInput(String input) {
-        if (bankCardValidator.isBankCardNumber(input)) {
-            return parseBankCardNumber(input);
+    public ParserResult checkInput(String input) {
+        if (bankCardValidator.validate(input)) {
+            return parseBankCardNumber(input).orElse(new EmptyResult<>());
         }
 
-        return numberParser.parse(input);
+        if (this.numberValidator.validate(input)){
+            return numberParser.parse(input).orElse(new EmptyResult<>());
+        }
+
+        return new EmptyResult<Void>();
     }
 }

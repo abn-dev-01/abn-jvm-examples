@@ -1,8 +1,7 @@
 package pro.abnjava.jvm.converter;
 
-import java.util.Optional;
-
 import pro.abnjava.jvm.converter.parser.ParserResult;
+import pro.abnjava.jvm.converter.parser.ResultType;
 
 public class InputResult <T> implements ParserResult<T> {
 
@@ -16,8 +15,8 @@ public class InputResult <T> implements ParserResult<T> {
      * @return
      */
     @Override
-    public Optional<T> getResult() {
-        return Optional.ofNullable(this.input);
+    public T getResult() {
+        return this.input;
     }
 
     /**

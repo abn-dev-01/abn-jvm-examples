@@ -33,9 +33,8 @@ class StandardNumberParserTest {
         Assertions.assertTrue(numberParserResultOpt.isPresent());
 
         final var parserResult = numberParserResultOpt.get();
-        final Optional<BigDecimal> resultOpt = parserResult.getResult();
-        Assertions.assertTrue(resultOpt.isPresent());
-        Assertions.assertEquals(new BigDecimal(expected), resultOpt.get());
+        Assertions.assertNotNull(parserResult.getResult());
+        Assertions.assertEquals(new BigDecimal(expected), parserResult.getResult());
     }
 
     @ParameterizedTest
@@ -85,8 +84,9 @@ class StandardNumberParserTest {
         Assertions.assertTrue(numberParserResultOpt.isPresent());
 
         final ParserResult<BigDecimal> resultOpt = numberParserResultOpt.get();
-        Assertions.assertTrue(resultOpt.getResult().isPresent());
-        Assertions.assertEquals(new BigDecimal(expected), resultOpt.getResult().get());
+        final BigDecimal result = resultOpt.getResult();
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(new BigDecimal(expected), result);
     }
 
     @ParameterizedTest
@@ -99,8 +99,9 @@ class StandardNumberParserTest {
         Assertions.assertTrue(numberParserOpt.isPresent());
 
         final ParserResult<BigDecimal> parserResult = numberParserOpt.get();
-        Assertions.assertTrue(parserResult.getResult().isPresent());
-        Assertions.assertEquals(new BigDecimal(expected), parserResult.getResult().get());
+        final BigDecimal result = parserResult.getResult();
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(new BigDecimal(expected), result);
     }
 
 
@@ -119,8 +120,9 @@ class StandardNumberParserTest {
         Assertions.assertTrue(numberParserOpt.isPresent());
 
         final var parserResult = numberParserOpt.get();
-        Assertions.assertTrue(parserResult.getResult().isPresent());
-        Assertions.assertEquals(new BigDecimal(expected), parserResult.getResult().get());
+        final BigDecimal result = parserResult.getResult();
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(new BigDecimal(expected), result);
     }
 
     @Test

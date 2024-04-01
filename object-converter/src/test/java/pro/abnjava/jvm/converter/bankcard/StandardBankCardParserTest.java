@@ -1,6 +1,7 @@
 package pro.abnjava.jvm.converter.bankcard;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.math.BigDecimal;
@@ -19,9 +20,8 @@ class StandardBankCardParserTest {
         assertTrue(bankCardNumberOpt.isPresent());
 
         final var parserResult = bankCardNumberOpt.get();
-        final Optional<BigDecimal> result = parserResult.getResult();
-        assertTrue(result.isPresent());
-        assertEquals(new BigDecimal("1234567890123456").toString(), result.get().toString());
+        assertNotNull(parserResult);
+        assertEquals(new BigDecimal("1234567890123456"), parserResult.getResult());
     }
 
     @Test
@@ -41,8 +41,9 @@ class StandardBankCardParserTest {
         assertTrue(bankCardParserOpt.isPresent());
 
         final var bankCardResult =  bankCardParserOpt.get();
-        assertTrue(bankCardResult.getResult().isPresent());
-        assertEquals("1234567890123456", bankCardResult.getResult().get().toString());
+        final BigDecimal result = bankCardResult.getResult();
+        assertNotNull(result);
+        assertEquals(new BigDecimal("1234567890123456"), result);
     }
 
     @Test
@@ -51,7 +52,8 @@ class StandardBankCardParserTest {
         assertTrue(bankCardParserOpt.isPresent());
 
         final var parserResult = bankCardParserOpt.get();
-        assertEquals("1234567890123456", parserResult.getResult().get().toString());
+        final BigDecimal result = parserResult.getResult();
+        assertEquals(new BigDecimal("1234567890123456"), result);
     }
 
     @Test
@@ -60,6 +62,7 @@ class StandardBankCardParserTest {
         assertTrue(bankCardParserOpt.isPresent());
 
         final var parserResult = bankCardParserOpt.get();
-        assertEquals("1234567890123456", parserResult.getResult().get().toString());
+        final BigDecimal result = parserResult.getResult();
+        assertEquals(new BigDecimal("1234567890123456"), result);
     }
 }

@@ -5,14 +5,16 @@ import java.util.Optional;
 
 import pro.abnjava.jvm.converter.bankcard.BankCardValidator;
 import pro.abnjava.jvm.converter.numbers.NumberParser;
+import pro.abnjava.jvm.converter.numbers.NumberValidator;
 import pro.abnjava.jvm.converter.parser.ParserResult;
 
 
 public interface InputChecker<T> {
 
-    Optional<ParserResult> checkInput(T input);
+    ParserResult<T> checkInput(T input);
 
     NumberParser getNumberParser();
+    NumberValidator getNumberValidator();
 
     BankCardValidator getBankCardValidator();
 

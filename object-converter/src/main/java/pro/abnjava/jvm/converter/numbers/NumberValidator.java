@@ -1,5 +1,6 @@
 package pro.abnjava.jvm.converter.numbers;
 
-public interface NumberValidator {
-    boolean validate(String input);
+import pro.abnjava.jvm.converter.parser.ConverterValidator;
+
+public interface NumberValidator extends ConverterValidator<String> {
 }

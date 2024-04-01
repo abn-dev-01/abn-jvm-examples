@@ -5,14 +5,12 @@ import java.util.Optional;
 /**
  * Abstract converter for your input and result types.
  *
- * @param <INPUT>  is an input argument type (String, Integer, BigDecimal, ...)
- * @param <RESULT> is a result type of parsing(String, Integer, BigDecimal, ...)
+ * @param <I>  is an input argument type (String, Integer, BigDecimal, ...)
+ * @param <R> is a result type of parsing(String, Integer, BigDecimal, ...)
  */
-public interface ObjectParser<INPUT, RESULT> {
+public interface ObjectParser<I, R> {
 
-    Optional<ParserResult<RESULT>> parse(INPUT argument);
-
-    //ResultType getType();
+    Optional<ParserResult<R>> parse(I argument);
 
     /*
      * When it returns true, the `parse()` method will return the input when parsing failed.

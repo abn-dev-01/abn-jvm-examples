@@ -5,7 +5,7 @@ import pro.abnjava.jvm.converter.bankcard.BankCardValidator;
 public class StandardBankCardValidator implements BankCardValidator {
 
     @Override
-    public boolean isBankCardNumber(String input) {
+    public boolean validate(String input) {
         // Remove all non-digit characters
         String digitsOnly = input.replaceAll("\\D", "");
 

@@ -1,10 +1,9 @@
 package pro.abnjava.jvm.converter.bankcard.impl;
 
 import java.math.BigDecimal;
-import java.util.Optional;
 
-import pro.abnjava.jvm.converter.ResultType;
 import pro.abnjava.jvm.converter.parser.ParserResult;
+import pro.abnjava.jvm.converter.parser.ResultType;
 
 /**
  * Object representing a bank card number - the result of the parsing.
@@ -16,13 +15,10 @@ public class BankCardResult implements ParserResult<BigDecimal> {
         this.bankCardNumber = new BigDecimal(bankCardNumber);
     }
 
-    public Optional<BigDecimal> getResult() {
-        return Optional.of(bankCardNumber);
+    public BigDecimal getResult() {
+        return bankCardNumber;
     }
 
-    /**
-     * @return
-     */
     @Override
     public ResultType getType() {
         return ResultType.BANK_CARD;

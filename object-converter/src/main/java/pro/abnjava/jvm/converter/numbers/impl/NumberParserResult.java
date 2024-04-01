@@ -1,10 +1,9 @@
 package pro.abnjava.jvm.converter.numbers.impl;
 
 import java.math.BigDecimal;
-import java.util.Optional;
 
-import pro.abnjava.jvm.converter.ResultType;
 import pro.abnjava.jvm.converter.parser.ParserResult;
+import pro.abnjava.jvm.converter.parser.ResultType;
 
 public class NumberParserResult implements ParserResult<BigDecimal> {
     private final BigDecimal number;
@@ -13,8 +12,8 @@ public class NumberParserResult implements ParserResult<BigDecimal> {
         this.number = number;
     }
 
-    public Optional<BigDecimal> getResult() {
-        return Optional.of(number);
+    public BigDecimal getResult() {
+        return number;
     }
 
     /**
