@@ -3,9 +3,17 @@
 Object converter library is a powerful and flexible API library designed to simplify your development process.
 It offers API for converting an input object to a `ResultType` object.
 
-* This API Library contains classes for parsing Object to a `ResultType`.
-* And you can use a Standard implementations provided by this library
-* Or create your own implementation adding a new Result Objects, parsers etc (see examples below).
+* This API Library contains classes for parsing Objects to a `ResultType`.
+* you can use a Standard implementation provided by this library
+* Or create your own implementation by adding new result objects, parsers, etc. (See examples below.)
+
+# Technologies
+
+| Name      | Details    |
+| ----      | ------      |
+| Language  | Java, JDK 17 | 
+| Builder | Gradle |
+
 
 -----------------------------------------
 
