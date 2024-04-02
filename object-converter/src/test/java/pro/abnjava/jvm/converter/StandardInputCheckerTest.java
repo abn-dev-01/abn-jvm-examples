@@ -15,6 +15,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import pro.abnjava.jvm.converter.bankcard.impl.BankCardResult;
 import pro.abnjava.jvm.converter.numbers.impl.NumberParserResult;
+import pro.abnjava.jvm.converter.parser.EmptyResult;
+import pro.abnjava.jvm.converter.parser.EmptyType;
 import pro.abnjava.jvm.converter.parser.ParserResult;
 import pro.abnjava.jvm.converter.parser.ResultType;
 
@@ -52,14 +54,14 @@ class StandardInputCheckerTest {
     void testCheckInputWithInvalidNumber() {
         final var parserResult = inputChecker.checkInput("abcde");
         assertNotNull(parserResult);
-        assertEquals(ResultType.EMPTY,parserResult.getType());
+        assertTrue(parserResult.getType() instanceof EmptyType);
     }
 
     @Test
     void testCheckInputEmpty() {
         final ParserResult parserResult = inputChecker.checkInput("");
         assertNotNull(parserResult);
-        assertEquals(ResultType.EMPTY,parserResult.getType());
+        assertTrue(parserResult instanceof EmptyResult);
     }
 
     @Test

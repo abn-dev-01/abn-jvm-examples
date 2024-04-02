@@ -24,6 +24,6 @@ public class InputResult <T> implements ParserResult<T> {
      */
     @Override
     public ResultType getType() {
-        return ResultType.INPUT;
+        return new InputResultType();
     }
 }

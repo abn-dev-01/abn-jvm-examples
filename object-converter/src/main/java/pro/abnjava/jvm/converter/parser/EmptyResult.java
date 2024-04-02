@@ -2,6 +2,8 @@ package pro.abnjava.jvm.converter.parser;
 
 public class EmptyResult<T> implements ParserResult<T> {
 
+    public static EmptyResult getInstance() { return new EmptyResult<>(); }
+
     /**
      * @return
      */
@@ -15,6 +17,6 @@ public class EmptyResult<T> implements ParserResult<T> {
      */
     @Override
     public ResultType getType() {
-        return ResultType.EMPTY;
+        return EmptyType.getInstance();
     }
 }

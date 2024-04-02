@@ -18,6 +18,6 @@ class EmptyResultTest {
 
     @Test
     void getType() {
-        assertEquals(ResultType.EMPTY, emptyResult.getType());
+        assertEquals(EmptyType.type, emptyResult.getType());
     }
 }

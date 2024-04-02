@@ -2,6 +2,7 @@ package pro.abnjava.jvm.converter.bankcard.impl;
 
 import java.math.BigDecimal;
 
+import pro.abnjava.jvm.converter.bankcard.BankCardType;
 import pro.abnjava.jvm.converter.parser.ParserResult;
 import pro.abnjava.jvm.converter.parser.ResultType;
 
@@ -21,7 +22,7 @@ public class BankCardResult implements ParserResult<BigDecimal> {
 
     @Override
     public ResultType getType() {
-        return ResultType.BANK_CARD;
+        return  BankCardType.getInstance();
     }
 
     @Override

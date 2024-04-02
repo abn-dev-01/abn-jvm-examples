@@ -2,6 +2,7 @@ package pro.abnjava.jvm.converter.numbers.impl;
 
 import java.math.BigDecimal;
 
+import pro.abnjava.jvm.converter.numbers.NumberType;
 import pro.abnjava.jvm.converter.parser.ParserResult;
 import pro.abnjava.jvm.converter.parser.ResultType;
 
@@ -21,7 +22,7 @@ public class NumberParserResult implements ParserResult<BigDecimal> {
      */
     @Override
     public ResultType getType() {
-        return ResultType.NUMBER;
+        return new NumberType();
     }
 
     @Override
