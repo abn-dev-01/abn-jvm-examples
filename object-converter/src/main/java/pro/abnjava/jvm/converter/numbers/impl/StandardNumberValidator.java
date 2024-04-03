@@ -23,7 +23,25 @@ public class StandardNumberValidator implements NumberValidator {
         "^(?:(([-]?)(\\$\\d|\\$\\s|\\$\\s\\d|\\(\\s\\$|\\d))|(\\(\\s\\d|\\$\\(|\\$\\s\\(|\\(\\$\\d|\\(\\$\\s\\d|\\(\\d))?([\\s\\d\\,\\.\\-\\)]*)$";
     private static final String REGEX_END =
         "^([\\s\\d\\,\\.\\-\\(]*)(?:\\d[\\s]?[\\s\\)]?\\$|\\d[\\s]?[\\$]?[\\s]?\\))?$";
-    private static final String REGEX_COUNT_BORDERS = "";
+
+    /*
+        Valid numbers:
+        ( 11111 )
+        (11111)
+
+        ( 11111 )$
+        ( 11111 $)
+        (11111$)
+        (11111)$
+
+        $( 11111 )
+        ($11111)
+        $(11111)
+     */
+    private static final String REGEX_BORDERS =
+        "^(?:\\(\\d[\\d\\,\\.\\s]+\\d\\)|\\(\\s[\\d\\,\\.\\s]*\\s\\)|\\(\\s[\\d\\,\\.\\s]+\\s\\$\\)" +
+            "|\\(\\s[\\d\\,\\.\\s]+\\s\\)\\$|\\$\\(\\s[\\d\\,\\.\\s]+\\s\\)|\\(\\$\\s[\\d\\,\\.\\s]+\\s\\)" +
+            "|(?:\\(\\$|\\$\\([\\d\\,\\.\\s]+\\))|(\\([\\d\\,\\.\\s]+(?:\\$\\)|\\)\\$)))$";
 
     /**
      * Validate if the arg is valid and can be converted to a number.
@@ -39,7 +57,21 @@ public class StandardNumberValidator implements NumberValidator {
         boolean valid = StringUtils.isNotBlank(arg);
         valid &= arg.matches(REGEX_START) || arg.matches(REGEX_END);
         if (valid) {
-            arg.replaceAll(REGEX_REPLACE, "");
+            if (arg.matches("[\\(\\)\\$]")) {
+                var cleanStr = "";
+                if (validateBordersStartEnd(arg)) {
+                    cleanStr= arg.replace("(", "");
+                    cleanStr= cleanStr.replace("($", "");
+                    cleanStr= cleanStr.replace("$(", "");
+                    cleanStr= cleanStr.replace(")", "");
+                    cleanStr= cleanStr.replace(")$", "");
+                    cleanStr= cleanStr.replace("$)", "");
+                    cleanStr= cleanStr.replace("$", "");
+                } else{
+                    return false;
+                }
+            }
+            // cleanStr here
         }
         return valid;
     }
@@ -51,7 +83,7 @@ public class StandardNumberValidator implements NumberValidator {
     public boolean validateEnd(String arg) {
         return arg.matches(REGEX_END);
     }
-    public boolean validateCountBordersStartEnd(String arg) {
-        return arg.matches(REGEX_END);
+    public boolean validateBordersStartEnd(String arg) {
+        return arg.matches(REGEX_BORDERS);
     }
 }

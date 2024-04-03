@@ -12,7 +12,7 @@ class StandardNumberValidatorTest {
     StandardNumberValidator validator = new StandardNumberValidator();
 
     @ParameterizedTest
-    @DisplayName("Validate only begin of string, assumed that the rest part is valid")
+    @DisplayName("Validate only begin of string, assumed that the rest part is valid, & hasnt invalid")
     @ValueSource(strings = {
         "1",
         "$0",
