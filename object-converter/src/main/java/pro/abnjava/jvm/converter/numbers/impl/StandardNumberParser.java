@@ -1,15 +1,21 @@
 package pro.abnjava.jvm.converter.numbers.impl;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-import pro.abnjava.jvm.converter.parser.ParserResult;
 import pro.abnjava.jvm.converter.numbers.NumberParser;
 import pro.abnjava.jvm.converter.numbers.NumberValidator;
+import pro.abnjava.jvm.converter.parser.EmptyResult;
+import pro.abnjava.jvm.converter.parser.ParserResult;
 import pro.abnjava.jvm.converter.util.Utils;
 
 public class StandardNumberParser implements NumberParser {
 
+    public static final String REGEX_NUMBR = "^(?!0\\d)(?!.*([.,])\\1)(?=.*\\d)[($]?[\\d., ]+[)]?[$€]?$\n";
     public static final String COMMA = ",";
     public static final String DOT = ".";
     public static final String EMPTY = "";
@@ -21,7 +27,7 @@ public class StandardNumberParser implements NumberParser {
     public static final String FRACTIONAL_REGEX = "^0+.\\d+";
 
 
-//    @Override
+    //    @Override
     public NumberValidator getValidator() {
         return new StandardNumberValidator();
     }
@@ -37,6 +43,42 @@ public class StandardNumberParser implements NumberParser {
 
     @Override
     public Optional<ParserResult<BigDecimal>> parse(String input) {
+      String regex = "^(?!0\\d)(?!.*([.,])\\1)(?=.*\\d)[($]?[\\d., ]+[)]?[$€]?$";
+//        String regex = "^(?!0\\d)(?!.*([.,])\\1)(?=.*\\d)[($]?[\\d., ]+[)]?[$€]?$";
+//        String regex = "^(?:-)?(?:\\d{1,3}(?:[,.\\s]\\d{3})*(?:[.,]\\d+)?|\\(\\d{1,3}(?:[,.\\s]\\d{3})*(?:[.,]\\d+)?\\))$";
+        Pattern pattern = Pattern.compile(regex);
+        // Remove all whitespace
+        Matcher matcher = pattern.matcher(input.replaceAll("\\s+", ""));
+        if (matcher.matches()) {
+            try {
+                DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.getDefault());
+                char groupingSeparator = symbols.getGroupingSeparator();
+                char decimalSeparator = symbols.getDecimalSeparator();
+                // Remove non-numeric characters except commas, periods, and hyphens
+                String cleanedInput = input.replaceAll("[^\\d.,-]", "");
+                if (cleanedInput.startsWith("(") && cleanedInput.endsWith(")")) {
+                    // Handle negative numbers
+                    cleanedInput = "-" + cleanedInput.substring(1, cleanedInput.length() - 1);
+                }
+                // Convert grouping separator to space and decimal separator to period
+                cleanedInput = cleanedInput.replaceAll(String.valueOf(groupingSeparator), "")
+                                           .replace(decimalSeparator, '.');
+
+                // Remove commas for parsing
+                return Optional.of(new NumberParserResult(
+                    new BigDecimal(cleanedInput.replaceAll("[,]", "")))
+                );
+            } catch (NumberFormatException e) {
+                // Handle parsing error
+                return Optional.of(new EmptyResult<>());
+            }
+        } else {
+            // Invalid format
+            return Optional.of(new EmptyResult<>());
+        }
+    }
+
+    public Optional<ParserResult<BigDecimal>> parse2(String input) {
 
         if (!getValidator().validate(input)) {
             return Optional.empty();
@@ -131,6 +173,4 @@ public class StandardNumberParser implements NumberParser {
         cleanedInput = cleanedInput.replace(COMMA, DOT);
         return cleanedInput;
     }
-
-
 }
