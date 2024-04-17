@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.math.BigDecimal;
-import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -18,7 +17,7 @@ import pro.abnjava.jvm.converter.numbers.impl.NumberParserResult;
 import pro.abnjava.jvm.converter.parser.EmptyResult;
 import pro.abnjava.jvm.converter.parser.EmptyType;
 import pro.abnjava.jvm.converter.parser.ParserResult;
-import pro.abnjava.jvm.converter.parser.ResultType;
+import pro.abnjava.jvm.converter.standard.StandardInputChecker;
 
 class StandardInputCheckerTest {
 
@@ -29,6 +28,7 @@ class StandardInputCheckerTest {
     }
 
     @Test
+    @DisplayName("Test check input with valid bank card `4111 1111 1111 1111` ")
     void testCheckInputWithValidBankCard() {
         final var result = inputChecker.checkInput("4111 1111 1111 1111");
         assertNotNull(result);
@@ -37,13 +37,15 @@ class StandardInputCheckerTest {
     }
 
     @Test
+    @DisplayName("Test: check input with invalid bank card `1234 5678 9012` ")
     void testCheckInputWithInvalidBankCard() {
         final var resultType = inputChecker.checkInput("1234 5678 9012");
         assertNotNull(resultType);
-        assertTrue(resultType instanceof NumberParserResult);
+        assertTrue(resultType.getType() instanceof EmptyType);
     }
 
     @Test
+    @DisplayName("Test check input with valid number `12345` ")
     void testCheckInputWithValidNumber() {
         final var parserResult = inputChecker.checkInput("12345");
         assertNotNull(parserResult);
@@ -51,6 +53,7 @@ class StandardInputCheckerTest {
     }
 
     @Test
+    @DisplayName("Test check input with invalid number `abcde` ")
     void testCheckInputWithInvalidNumber() {
         final var parserResult = inputChecker.checkInput("abcde");
         assertNotNull(parserResult);
@@ -58,6 +61,7 @@ class StandardInputCheckerTest {
     }
 
     @Test
+    @DisplayName("Test check input empty")
     void testCheckInputEmpty() {
         final ParserResult parserResult = inputChecker.checkInput("");
         assertNotNull(parserResult);

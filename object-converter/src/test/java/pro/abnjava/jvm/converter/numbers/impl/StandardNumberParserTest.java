@@ -1,13 +1,15 @@
-package pro.abnjava.jvm.converter.numbers;
+package pro.abnjava.jvm.converter.numbers.impl;
 
 import java.math.BigDecimal;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import pro.abnjava.jvm.converter.numbers.NumberParser;
 import pro.abnjava.jvm.converter.parser.ParserResult;
 import pro.abnjava.jvm.converter.numbers.impl.StandardNumberParser;
 
@@ -46,6 +48,21 @@ class StandardNumberParserTest {
         var number = numberParser.parse(input);
         Assertions.assertTrue(number.isPresent());
         Assertions.assertEquals(new BigDecimal(expected), number.get().getResult());
+    }
+
+    @ParameterizedTest
+    @CsvSource(value = {
+        "1,234.56$/1234.56",
+        "$1,234.56/1234.56",
+    }, delimiter = '/')
+    void toNumberUsdTest(String input, String expected) {
+        var numberParserOpt = numberParser.parse(input);
+        Assertions.assertTrue(numberParserOpt.isPresent());
+
+        final ParserResult<BigDecimal> parserResult = numberParserOpt.get();
+        final BigDecimal result = parserResult.getResult();
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(new BigDecimal(expected), result);
     }
 
     /**
@@ -89,21 +106,6 @@ class StandardNumberParserTest {
         Assertions.assertEquals(new BigDecimal(expected), result);
     }
 
-    @ParameterizedTest
-    @CsvSource(value = {
-        "$1,234.56/1234.56",
-        "1,234.56 $/1234.56",
-    }, delimiter = '/')
-    void toNumberUsdTest(String input, String expected) {
-        var numberParserOpt = numberParser.parse(input);
-        Assertions.assertTrue(numberParserOpt.isPresent());
-
-        final ParserResult<BigDecimal> parserResult = numberParserOpt.get();
-        final BigDecimal result = parserResult.getResult();
-        Assertions.assertNotNull(result);
-        Assertions.assertEquals(new BigDecimal(expected), result);
-    }
-
 
     @ParameterizedTest
     @CsvSource(value = {
@@ -111,9 +113,7 @@ class StandardNumberParserTest {
         "(1,234)/-1234",
         "(1,234,567)/-1234567",
         "-1 234.56/-1234.56",
-        "- 1 234 567.56/-1234567.56",
         "1 234 567.56-/-1234567.56",
-        "1 234 567.56 -/-1234567.56",
     }, delimiter = '/')
     void toNumberSpaceTest(String input, String expected) {
         var numberParserOpt = numberParser.parse(input);
@@ -123,6 +123,18 @@ class StandardNumberParserTest {
         final BigDecimal result = parserResult.getResult();
         Assertions.assertNotNull(result);
         Assertions.assertEquals(new BigDecimal(expected), result);
+    }
+
+    @ParameterizedTest
+    @CsvSource(value = {
+        "- 1 234 567.56",
+        "1 234 567.56 -",
+        "1 234 567.56 $",
+    }, delimiter = '/')
+    @DisplayName("Test with spaces: invalid numbers.")
+    void toNumberSpaceInvalidTest(String input) {
+        var numberParserOpt = numberParser.parse(input);
+        Assertions.assertTrue(numberParserOpt.isEmpty());
     }
 
     @Test

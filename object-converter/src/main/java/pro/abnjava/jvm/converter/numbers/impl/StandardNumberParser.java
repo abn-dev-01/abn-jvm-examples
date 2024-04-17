@@ -41,44 +41,9 @@ public class StandardNumberParser implements NumberParser {
         return false; // return empty when parsing failed.
     }
 
+
     @Override
     public Optional<ParserResult<BigDecimal>> parse(String input) {
-      String regex = "^(?!0\\d)(?!.*([.,])\\1)(?=.*\\d)[($]?[\\d., ]+[)]?[$€]?$";
-//        String regex = "^(?!0\\d)(?!.*([.,])\\1)(?=.*\\d)[($]?[\\d., ]+[)]?[$€]?$";
-//        String regex = "^(?:-)?(?:\\d{1,3}(?:[,.\\s]\\d{3})*(?:[.,]\\d+)?|\\(\\d{1,3}(?:[,.\\s]\\d{3})*(?:[.,]\\d+)?\\))$";
-        Pattern pattern = Pattern.compile(regex);
-        // Remove all whitespace
-        Matcher matcher = pattern.matcher(input.replaceAll("\\s+", ""));
-        if (matcher.matches()) {
-            try {
-                DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.getDefault());
-                char groupingSeparator = symbols.getGroupingSeparator();
-                char decimalSeparator = symbols.getDecimalSeparator();
-                // Remove non-numeric characters except commas, periods, and hyphens
-                String cleanedInput = input.replaceAll("[^\\d.,-]", "");
-                if (cleanedInput.startsWith("(") && cleanedInput.endsWith(")")) {
-                    // Handle negative numbers
-                    cleanedInput = "-" + cleanedInput.substring(1, cleanedInput.length() - 1);
-                }
-                // Convert grouping separator to space and decimal separator to period
-                cleanedInput = cleanedInput.replaceAll(String.valueOf(groupingSeparator), "")
-                                           .replace(decimalSeparator, '.');
-
-                // Remove commas for parsing
-                return Optional.of(new NumberParserResult(
-                    new BigDecimal(cleanedInput.replaceAll("[,]", "")))
-                );
-            } catch (NumberFormatException e) {
-                // Handle parsing error
-                return Optional.of(new EmptyResult<>());
-            }
-        } else {
-            // Invalid format
-            return Optional.of(new EmptyResult<>());
-        }
-    }
-
-    public Optional<ParserResult<BigDecimal>> parse2(String input) {
 
         if (!getValidator().validate(input)) {
             return Optional.empty();

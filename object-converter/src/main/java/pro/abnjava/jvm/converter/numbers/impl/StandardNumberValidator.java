@@ -1,6 +1,9 @@
 package pro.abnjava.jvm.converter.numbers.impl;
 
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
 import pro.abnjava.jvm.converter.numbers.NumberValidator;
@@ -8,21 +11,12 @@ import pro.abnjava.jvm.converter.numbers.NumberValidator;
 @Log4j2
 public class StandardNumberValidator implements NumberValidator {
 
-//    private static final String NUMBER_REGEX = "[\\d.\\s\\$\\€,\\-\\(\\)]*";
-//    private static final String NUMBER_REGEX =  "^(?!0\\d)(?!.*([.,])\\1)(?=.*\\d)[($]?[\\d., ]+[)]?[$€]?$\n";
-
-    private static final String NUMBER_REGEX =
-        "^(?:-)?(?:\\d{1,3}(?:[,.\\s]\\d{3})*(?:[.,]\\d+)?|\\(\\d{1,3}(?:[,.\\s]\\d{3})*(?:[.,]\\d+)?\\)|[$€]\\s?\\d{1,3}(?:[,.\\s]\\d{3})*(?:[.,]\\d+)?\\s?[$€]?|\\(\\s?\\d{1,3}(?:[,.\\s]\\d{3})*(?:[.,]\\d+)?\\s?[$€]?\\))$";
-
-    // only start validation!
-    private static final String REGEX_START_END =
-        "^(?:\\$\\(|\\(\\$|\\(|\\$)(?=[^$]*\\$[^$]*$).*(?:\\$\\)|\\$\\)|\\)\\$)$";
-
     // validate start
     private static final String REGEX_START =
-        "^(?:(([-]?)(\\$\\d|\\$\\s|\\$\\s\\d|\\(\\s\\$|\\d))|(\\(\\s\\d|\\$\\(|\\$\\s\\(|\\(\\$\\d|\\(\\$\\s\\d|\\(\\d))?([\\s\\d\\,\\.\\-\\)]*)$";
-    private static final String REGEX_END =
-        "^([\\s\\d\\,\\.\\-\\(]*)(?:\\d[\\s]?[\\s\\)]?\\$|\\d[\\s]?[\\$]?[\\s]?\\))?$";
+        "^(?:((-?)(\\$\\d|\\$\\s|\\$\\s\\d|\\(\\s\\$|\\d))|(\\(\\s\\d|\\$\\(" +
+            "|\\$\\s\\(|\\(\\$\\d|\\(\\$\\s\\d|\\(\\d))?([\\s\\d\\,\\.\\-\\)\\$]*)$";
+    private static final String REGEX_END = // valid ending
+        "^([\\d\\s\\.\\,\\(\\$\\-]*)\\d(?:\\d\\s?\\)|[\\)\\s]?\\$|[\\d\\s]\\$\\)|\\d|[\\d\\s\\$]\\-)?$";
 
     /*
         Valid numbers:
@@ -39,9 +33,15 @@ public class StandardNumberValidator implements NumberValidator {
         $(11111)
      */
     private static final String REGEX_BORDERS =
-        "^(?:\\(\\d[\\d\\,\\.\\s]+\\d\\)|\\(\\s[\\d\\,\\.\\s]*\\s\\)|\\(\\s[\\d\\,\\.\\s]+\\s\\$\\)" +
-            "|\\(\\s[\\d\\,\\.\\s]+\\s\\)\\$|\\$\\(\\s[\\d\\,\\.\\s]+\\s\\)|\\(\\$\\s[\\d\\,\\.\\s]+\\s\\)" +
-            "|(?:\\(\\$|\\$\\([\\d\\,\\.\\s]+\\))|(\\([\\d\\,\\.\\s]+(?:\\$\\)|\\)\\$)))$";
+        "^(?:\\$?\\([\\d\\,\\.\\s]+\\)|\\([\\d\\.\\,\\$]+\\)\\$?|\\$?\\(\\s\\d+\\s\\)|\\(\\d+\\)\\$|\\(\\s\\d+\\s\\)\\$" +
+            "|\\d[\\d\\,\\.\\s]*\\$\\-?|\\-?\\d[\\d\\,\\.\\s]*\\$?|\\-?\\$?\\d[\\d\\,\\.\\s]*|\\$?[\\d\\,\\.\\s]*\\-?" +
+            "|\\(\\$[\\d\\,\\.\\s]*\\))$";
+
+    private static final String REGEX_MIDDLE = "^(?:\\d{1,3}(?:[,.\\s]\\d{3})*(?:[.,]\\d+)?" +
+        "|\\d{1,3}(?:[,.\\s]\\d{3})+(?:[.,]\\d+)?|(\\d{1,3}(?:([., ])(?:\\d{3}\\1)*\\d{3})?(?:[.,]\\d*)?)" +
+        "|\\d+[,.]?\\d+)(?<! )$";
+    private static final String REGEX_NEGATIVE_SIGN =
+        "^(?:\\-[\\d\\,\\.\\s]+|[\\d\\,\\.\\s]+\\-|\\(\\$?[\\d\\,\\.\\s]+\\$?\\))$";
 
     /**
      * Validate if the arg is valid and can be converted to a number.
@@ -55,10 +55,16 @@ public class StandardNumberValidator implements NumberValidator {
         // validate step by step
         // sign $ can be only one time at the beginning or the end.
         boolean valid = StringUtils.isNotBlank(arg);
-        valid &= arg.matches(REGEX_START) || arg.matches(REGEX_END);
+        boolean isNegative = false;
+        valid &= arg.matches(REGEX_START) && arg.matches(REGEX_END);
         if (valid) {
-            if (arg.matches("[\\(\\)\\$]")) {
-                var cleanStr = "";
+            var cleanStr = arg;
+            // determine negative sign
+            isNegative = arg.matches(REGEX_NEGATIVE_SIGN);
+
+            Pattern pattern = Pattern.compile(".*[)$(-].*");
+            Matcher matcher = pattern.matcher(arg);
+            if (matcher.matches()) {
                 if (validateBordersStartEnd(arg)) {
                     cleanStr= arg.replace("(", "");
                     cleanStr= cleanStr.replace("($", "");
@@ -67,11 +73,12 @@ public class StandardNumberValidator implements NumberValidator {
                     cleanStr= cleanStr.replace(")$", "");
                     cleanStr= cleanStr.replace("$)", "");
                     cleanStr= cleanStr.replace("$", "");
+                    cleanStr = cleanStr.replace("-", "");
                 } else{
                     return false;
                 }
             }
-            // cleanStr here
+            valid &= cleanStr.matches(REGEX_MIDDLE);
         }
         return valid;
     }
