@@ -27,7 +27,7 @@ This library includes a Standard implementation and parses input string:
 - then returns:
   - `EmptyResult` if parsing failed,
   - `NumberResult` if there found a number
-  - `BankCardResult` if determined a Bank Card.
+  - `BankCardResult` if there determined a Bank Card.
 
 ### Standard Number parser
 
