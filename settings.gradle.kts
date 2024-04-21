@@ -9,3 +9,4 @@
 rootProject.name = "abn-jvm-examples"
 include("number-converter")
 include("object-converter")
+include("vfs")

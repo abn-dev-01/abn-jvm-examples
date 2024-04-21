@@ -45,3 +45,4 @@ out/
 
 ### MAVEN ###
 target/
+/vfs/vfs.dat
