@@ -2,6 +2,13 @@ package pro.abnjava.jvm.vfs.standard;
 
 import pro.abnjava.jvm.vfs.AbnFileSystemEntry;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.stereotype.Service;
+
+@Log4j2
+@RequiredArgsConstructor
+@Service
 public class FileSystemEntryStandard implements AbnFileSystemEntry {
     private String name;
     private boolean isDirectory;

@@ -9,19 +9,25 @@ import java.nio.file.Paths;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.stereotype.Service;
 import pro.abnjava.jvm.vfs.AbnFileSystemEntry;
 import pro.abnjava.jvm.vfs.AbnVirtualFileSystem;
 import pro.abnjava.jvm.vfs.exception.VfsRuntimeException;
 
 @Log4j2
+@RequiredArgsConstructor
+@Service
 public class VirtualFileSystemStandard implements AbnVirtualFileSystem {
 
     private static final String FILE_NAME = "vfs.dat";
 
     private Map<String, AbnFileSystemEntry> entries;
 
-    public VirtualFileSystemStandard() {
+    @PostConstruct
+    public void postConstruct() {
         try {
             entries = new ConcurrentHashMap<>();
             initializeFileSystem();

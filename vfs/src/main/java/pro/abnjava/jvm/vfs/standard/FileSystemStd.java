@@ -3,51 +3,58 @@ package pro.abnjava.jvm.vfs.standard;
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.stereotype.Service;
 import pro.abnjava.jvm.vfs.AbnFileSystem;
+import pro.abnjava.jvm.vfs.AbnVirtualFileSystem;
 
+@Log4j2
+@RequiredArgsConstructor
+@Service
 public class FileSystemStd implements AbnFileSystem {
 
-    public FileSystemStd() {}
+    private final AbnVirtualFileSystem vfs;
 
     @Override
     public void addFile(String path, byte[] data) {
         if (!path.startsWith("/")) {
             path = "/" + path;
         }
-        if (entries.containsKey(path)) {
+        if (vfs.getMap().containsKey(path)) {
             throw new RuntimeException("File already exists.");
         }
         String parentPath = path.substring(0, path.lastIndexOf('/'));
-        if (!entries.containsKey(parentPath) || !entries.get(parentPath).isDirectory()) {
+        if (!vfs.getMap().containsKey(parentPath) || !vfs.getMap().get(parentPath).isDirectory()) {
             throw new RuntimeException("No such directory.");
         }
-        entries.put(path, new FileSystemEntryStandard(path.substring(path.lastIndexOf('/') + 1), false));
-        entries.get(path).setData(data);
+        vfs.getMap().put(path, new FileSystemEntryStandard(path.substring(path.lastIndexOf('/') + 1), false));
+        vfs.getMap().get(path).setData(data);
     }
 
     @Override
     public byte[] readFile(String path) {
-        if (!entries.containsKey(path) || entries.get(path).isDirectory()) {
+        if (!vfs.getMap().containsKey(path) || vfs.getMap().get(path).isDirectory()) {
             throw new RuntimeException("No such file.");
         }
-        return entries.get(path).getData();
+        return vfs.getMap().get(path).getData();
     }
 
     @Override
     public void deleteFile(String path) {
-        if (!entries.containsKey(path) || entries.get(path).isDirectory()) {
+        if (!vfs.getMap().containsKey(path) || vfs.getMap().get(path).isDirectory()) {
             throw new RuntimeException("No such file.");
         }
-        entries.remove(path);
+        vfs.getMap().remove(path);
     }
 
     @Override
     public List<String> listFiles(String directoryPath) {
-        if (!entries.containsKey(directoryPath) || !entries.get(directoryPath).isDirectory()) {
+        if (!vfs.getMap().containsKey(directoryPath) || !vfs.getMap().get(directoryPath).isDirectory()) {
             throw new RuntimeException("No such directory.");
         }
         List<String> fileList = new ArrayList<>();
-        for (String key : entries.keySet()) {
+        for (String key : vfs.getMap().keySet()) {
             if (key.startsWith(directoryPath) && !key.equals(directoryPath)) {
                 fileList.add(key);
             }
@@ -57,9 +64,9 @@ public class FileSystemStd implements AbnFileSystem {
 
     @Override
     public void createDirectory(String path) {
-        if (entries.containsKey(path)) {
+        if (vfs.getMap().containsKey(path)) {
             throw new RuntimeException("Directory already exists.");
         }
-        entries.put(path, new FileSystemEntryStandard(path.substring(path.lastIndexOf('/') + 1), true));
+        vfs.getMap().put(path, new FileSystemEntryStandard(path.substring(path.lastIndexOf('/') + 1), true));
     }
 }
