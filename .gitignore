@@ -17,7 +17,6 @@ build/
 .springBeans
 .sts4-cache
 bin/
-!**/src/main/**/bin/
 !**/src/test/**/bin/
 
 ### IntelliJ IDEA ###
@@ -45,4 +44,6 @@ out/
 
 ### MAVEN ###
 target/
-/vfs/vfs.dat
+
+### Projects ###
+/***/vfs.dat

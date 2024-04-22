@@ -64,9 +64,22 @@ public class FileSystemStd implements AbnFileSystem {
 
     @Override
     public void createDirectory(String path) {
+        // create MAP record
         if (vfs.getMap().containsKey(path)) {
             throw new RuntimeException("Directory already exists.");
         }
-        vfs.getMap().put(path, new FileSystemEntryStandard(path.substring(path.lastIndexOf('/') + 1), true));
+        try {
+            vfs.getMap()
+               .put(path, new FileSystemEntryStandard(
+                   path.substring(path.lastIndexOf('/') + 1), true));
+            // create bytes array in VFS
+            
+
+            //
+        } catch (Exception e) {
+            var removed = vfs.getMap().remove(path);
+        } finally {
+            LOG.info("createDirectory() - ", () -> path);
+        }
     }
 }
