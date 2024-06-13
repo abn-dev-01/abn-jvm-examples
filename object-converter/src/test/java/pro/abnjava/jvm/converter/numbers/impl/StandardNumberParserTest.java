@@ -1,19 +1,16 @@
-package pro.abnjava.jvm.converter.numbers;
+package pro.abnjava.jvm.number.converter.numbers;
 
 import java.math.BigDecimal;
-import java.util.Optional;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import pro.abnjava.jvm.converter.parser.ParserResult;
-import pro.abnjava.jvm.converter.numbers.impl.StandardNumberParser;
 
 class StandardNumberParserTest {
 
-    private final NumberParser numberParser = new StandardNumberParser();
+    private final NumberParser parser = new StandardNumberParser();
 
     @BeforeEach
     void setUp() {
@@ -29,12 +26,9 @@ class StandardNumberParserTest {
         "(1,234,567.56)/-1234567.56",
     }, delimiter = '/')
     void toNumber(String input, String expected) {
-        var numberParserResultOpt = numberParser.parse(input);
-        Assertions.assertTrue(numberParserResultOpt.isPresent());
-
-        final var parserResult = numberParserResultOpt.get();
-        Assertions.assertNotNull(parserResult.getResult());
-        Assertions.assertEquals(new BigDecimal(expected), parserResult.getResult());
+        var number = parser.toNumber(input);
+        Assertions.assertTrue(number.isPresent());
+        Assertions.assertEquals(new BigDecimal(expected), number.get().getNumber());
     }
 
     @ParameterizedTest
@@ -43,9 +37,9 @@ class StandardNumberParserTest {
         "1000/1000",
     }, delimiter = '/')
     void toNumberEasy(String input, String expected) {
-        var number = numberParser.parse(input);
+        var number = parser.toNumber(input);
         Assertions.assertTrue(number.isPresent());
-        Assertions.assertEquals(new BigDecimal(expected), number.get().getResult());
+        Assertions.assertEquals(new BigDecimal(expected), number.get().getNumber());
     }
 
     /**
@@ -80,13 +74,9 @@ class StandardNumberParserTest {
         "0.001 002 003/0.001002003",
     }, delimiter = '/')
     void toNumberDecimals(String input, String expected) {
-        var numberParserResultOpt = numberParser.parse(input);
-        Assertions.assertTrue(numberParserResultOpt.isPresent());
-
-        final ParserResult<BigDecimal> resultOpt = numberParserResultOpt.get();
-        final BigDecimal result = resultOpt.getResult();
-        Assertions.assertNotNull(result);
-        Assertions.assertEquals(new BigDecimal(expected), result);
+        var number = parser.toNumber(input);
+        Assertions.assertTrue(number.isPresent());
+        Assertions.assertEquals(new BigDecimal(expected), number.get().getNumber());
     }
 
     @ParameterizedTest
@@ -95,13 +85,9 @@ class StandardNumberParserTest {
         "1,234.56 $/1234.56",
     }, delimiter = '/')
     void toNumberUsdTest(String input, String expected) {
-        var numberParserOpt = numberParser.parse(input);
-        Assertions.assertTrue(numberParserOpt.isPresent());
-
-        final ParserResult<BigDecimal> parserResult = numberParserOpt.get();
-        final BigDecimal result = parserResult.getResult();
-        Assertions.assertNotNull(result);
-        Assertions.assertEquals(new BigDecimal(expected), result);
+        var number = parser.toNumber(input);
+        Assertions.assertTrue(number.isPresent());
+        Assertions.assertEquals(new BigDecimal(expected), number.get().getNumber());
     }
 
 
@@ -116,19 +102,15 @@ class StandardNumberParserTest {
         "1 234 567.56 -/-1234567.56",
     }, delimiter = '/')
     void toNumberSpaceTest(String input, String expected) {
-        var numberParserOpt = numberParser.parse(input);
-        Assertions.assertTrue(numberParserOpt.isPresent());
-
-        final var parserResult = numberParserOpt.get();
-        final BigDecimal result = parserResult.getResult();
-        Assertions.assertNotNull(result);
-        Assertions.assertEquals(new BigDecimal(expected), result);
+        var number = parser.toNumber(input);
+        Assertions.assertTrue(number.isPresent());
+        Assertions.assertEquals(new BigDecimal(expected), number.get().getNumber());
     }
 
     @Test
     void isFractionalNumber() {
-        Assertions.assertTrue(((StandardNumberParser) numberParser).isFractionalNumber("0.001002003004"));
-        Assertions.assertTrue(((StandardNumberParser) numberParser).isFractionalNumber("00.001002003004"));
-        Assertions.assertTrue(((StandardNumberParser) numberParser).isFractionalNumber("000.001002"));
+        Assertions.assertTrue(((StandardNumberParser)parser).isFractionalNumber("0.001002003004"));
+        Assertions.assertTrue(((StandardNumberParser)parser).isFractionalNumber("00.001002003004"));
+        Assertions.assertTrue(((StandardNumberParser)parser).isFractionalNumber("000.001002"));
     }
 }

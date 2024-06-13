@@ -1,15 +1,21 @@
 package pro.abnjava.jvm.converter.numbers.impl;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-import pro.abnjava.jvm.converter.parser.ParserResult;
 import pro.abnjava.jvm.converter.numbers.NumberParser;
 import pro.abnjava.jvm.converter.numbers.NumberValidator;
+import pro.abnjava.jvm.converter.parser.EmptyResult;
+import pro.abnjava.jvm.converter.parser.ParserResult;
 import pro.abnjava.jvm.converter.util.Utils;
 
 public class StandardNumberParser implements NumberParser {
 
+    public static final String REGEX_NUMBR = "^(?!0\\d)(?!.*([.,])\\1)(?=.*\\d)[($]?[\\d., ]+[)]?[$€]?$\n";
     public static final String COMMA = ",";
     public static final String DOT = ".";
     public static final String EMPTY = "";
@@ -21,7 +27,7 @@ public class StandardNumberParser implements NumberParser {
     public static final String FRACTIONAL_REGEX = "^0+.\\d+";
 
 
-//    @Override
+    //    @Override
     public NumberValidator getValidator() {
         return new StandardNumberValidator();
     }
@@ -34,6 +40,7 @@ public class StandardNumberParser implements NumberParser {
     public boolean returnInput() {
         return false; // return empty when parsing failed.
     }
+
 
     @Override
     public Optional<ParserResult<BigDecimal>> parse(String input) {
@@ -131,6 +138,4 @@ public class StandardNumberParser implements NumberParser {
         cleanedInput = cleanedInput.replace(COMMA, DOT);
         return cleanedInput;
     }
-
-
 }

@@ -1,13 +1,15 @@
-package pro.abnjava.jvm.converter;
+package pro.abnjava.jvm.converter.standard;
 
 import java.math.BigDecimal;
 import java.util.Optional;
 
+import pro.abnjava.jvm.converter.InputChecker;
 import pro.abnjava.jvm.converter.bankcard.BankCardParser;
 import pro.abnjava.jvm.converter.bankcard.BankCardValidator;
 import pro.abnjava.jvm.converter.bankcard.impl.StandardBankCardParser;
 import pro.abnjava.jvm.converter.bankcard.impl.StandardBankCardValidator;
 import pro.abnjava.jvm.converter.numbers.NumberParser;
+import pro.abnjava.jvm.converter.numbers.NumberType;
 import pro.abnjava.jvm.converter.numbers.NumberValidator;
 import pro.abnjava.jvm.converter.numbers.impl.StandardNumberParser;
 import pro.abnjava.jvm.converter.numbers.impl.StandardNumberValidator;
@@ -64,8 +66,9 @@ public class StandardInputChecker implements InputChecker<String> {
             return parseBankCardNumber(input).orElse(new EmptyResult<>());
         }
 
-        if (this.numberValidator.validate(input)){
-            return numberParser.parse(input).orElse(new EmptyResult<>());
+        var numberParserResult = numberParser.parse(input).orElse(new EmptyResult<>());
+        if (numberParserResult.getType() instanceof NumberType) {
+            return numberParserResult;
         }
 
         return new EmptyResult<Void>();

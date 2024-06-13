@@ -1,9 +1,8 @@
 package pro.abnjava.jvm.converter.parser;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 class EmptyResultTest {
@@ -18,6 +17,6 @@ class EmptyResultTest {
 
     @Test
     void getType() {
-        assertEquals(ResultType.EMPTY, emptyResult.getType());
+        assertTrue(emptyResult.getType() instanceof EmptyType);
     }
 }

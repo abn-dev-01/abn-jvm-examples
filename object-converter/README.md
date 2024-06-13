@@ -27,7 +27,7 @@ This library includes a Standard implementation and parses input string:
 - then returns:
   - `EmptyResult` if parsing failed,
   - `NumberResult` if there found a number
-  - `BankCardResult` if determined a Bank Card.
+  - `BankCardResult` if there determined a Bank Card.
 
 ### Standard Number parser
 
@@ -76,3 +76,30 @@ Examples:
 2. Implement `ParserRsult`
 
 3. Extend `InputChecker` adding a new object. 
+
+4. Examples:
+   .....
+
+    (1,. 23)
+    ( 1,. 23 )
+    $( 1., 23 )
+    ( 123 )$
+    ($111)
+    ($111 000)
+    1234$
+    1234$-
+    12,.34$-
+    -1234$
+    -1234
+    1234
+    1234 444
+    1212 122 233 333
+    -111 234
+    -111.234
+    -111,234,
+    -111,234,000
+    -$321
+    $321-
+    1
+    123
+    123456
